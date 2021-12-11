@@ -1,4 +1,5 @@
-"""Old School Runescape NMZ Training Bot
+"""
+Old School Runescape NMZ Training Bot
 
 Based on program by Cole Boothman
 https://github.com/coleboothman/NMZ-Script
@@ -19,8 +20,6 @@ this place on the screen, since the coordinates will rely on this.
 
 The absorb pots randomly wait between 1-4 'thresholds' that you've set and 
 will drink the proper amount of doses associated with the threshold multiplier.
-
-Enjoy!
 """
 
 import pyautogui as auto
@@ -28,7 +27,7 @@ import sys
 import random
 import time
 
-# We assume that we are taking in 5 super combat pots, 
+# We assume that we are taking in 5 pots 
 # in the first row/left first spot of second
 POTS = [
   {'coords': [997, 404], 'doses': 4},
@@ -66,7 +65,7 @@ HP_X = [946, 976]
 HP_Y = [162, 184]
 
 # number of absorbs
-NUM_ABSORBS = 17
+NUM_ABSORBS = ABSORBS.size()
 global FINISHED_ABSORBS
 FINISHED_ABSORBS = False
 
@@ -127,7 +126,6 @@ def main():
   repot_start_time = time.time()
   absorb_start_time = time.time()
   drank_pots = False
-
 
   try:
       while (not FINISHED_ABSORBS):
