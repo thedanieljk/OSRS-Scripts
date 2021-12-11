@@ -18,16 +18,15 @@ this place on the screen, since the coordinates will rely on this.
 - go in nmz, rock cake to 1hp, then run the script.
 
 The absorb pots randomly wait between 1-4 'thresholds' that you've set and 
-will drink the proper amount of doses associated with the threshold multipler.
+will drink the proper amount of doses associated with the threshold multiplier.
 
 Enjoy!
 """
+
 import pyautogui as auto
 import sys
 import random
 import time
-
-FLASH_SPEC = True
 
 # We assume that we are taking in 5 super combat pots, 
 # in the first row/left first spot of second
@@ -66,39 +65,16 @@ ABSORBS = [
 HP_X = [946, 976]
 HP_Y = [162, 184]
 
-# Spec Orb
-SPEC_X = [1000, 1027]
-SPEC_Y = [251, 276]
-
 # number of absorbs
 NUM_ABSORBS = 17
 global FINISHED_ABSORBS
 FINISHED_ABSORBS = False
 
-
-# FOR FINDING COORDS ON SCREEN 
-# try:
-#     while True:
-#         x, y = auto.position()
-#         positionStr = 'X: ' + str(x).rjust(4) + ' Y: ' + str(y).rjust(4)
-#         print(positionStr),
-#         print('\b' * (len(positionStr) + 2)),
-#         sys.stdout.flush()
-# except KeyboardInterrupt:
-#     print('\n')
-
 def flash_prayorb():
-  # Weird behaviour with using the auto.click=(clicks=2) but below works.
+  # Weird behavior with using the auto.click=(clicks=2) but below works.
   auto.moveTo(random.randint(HP_X[0], HP_X[1]), random.randint(HP_Y[0], HP_Y[1]), 0.50)
   auto.click()
   time.sleep(random.uniform(0.6, 0.9))
-  auto.click()
-
-def flash_spec():
-  # Weird behaviour with using the auto.click=(clicks=2) but below works.
-  auto.moveTo(random.randint(SPEC_X[0], SPEC_X[1]), random.randint(SPEC_Y[0], SPEC_Y[1]), 0.50)
-  auto.click()
-  time.sleep(random.uniform(4.0, 8.0))
   auto.click()
 
 def drink_pots():
@@ -110,13 +86,10 @@ def drink_pots():
       auto.click()
       pot['doses'] -= 1
       break
-  # if (FLASH_SPEC):
-  #   # print("flash spec")
-  #   flash_spec()
-    
 
 def drink_absorbs(doses):
   num_drank = 0
+  # loop through number of doses planned to drink (threshold multiplier)
   for _ in range(doses):
     for pot in ABSORBS:
       # If still doses in this pot, drink. If not check next
@@ -127,9 +100,11 @@ def drink_absorbs(doses):
         pot['doses'] -= 1
         time.sleep(random.uniform(1.5, 2.2))
         break
+      #if no doses left in pot, increment num_drank
       elif pot['doses'] == 0:
         num_drank += 1
         print("num drank: " + str(num_drank))
+  # if drank all absorbs, change FINISHED_ABSORBS so no more trying to drink
   if (num_drank== (NUM_ABSORBS * doses)):
     print("FINISHED ABSORPTIONS")
     global FINISHED_ABSORBS
@@ -142,7 +117,6 @@ def main():
   # Initial reset of HP to start program
   flash_prayorb()
   drink_pots()
-  # FLASH_SPEC = True
 
   # threshold time for repotting (seconds) & one dose of absorb used
   repot_threshold, absorb_threshold = 600, 150
@@ -177,12 +151,15 @@ def main():
           # if we drank a pot, move back to prayer orb
           if drank_pots:
             auto.moveTo(random.randint(HP_X[0], HP_X[1]), random.randint(HP_Y[0], HP_Y[1]), 0.5)
+      # only flash prayorb 30 more times until ending, finished all abosrbs
       afterCounter = 0
-      while (afterCounter < 50):
+      while (afterCounter < 30):
         print("reached end after counter")
         flash_prayorb()
         afterCounter  += 1
         time.sleep(random.randint(45, 52))
+      print("Completed NMZ Program, exiting")
+      sys.exit(0)
 
 
   except (KeyboardInterrupt, SystemExit):
